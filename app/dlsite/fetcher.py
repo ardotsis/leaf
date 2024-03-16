@@ -11,7 +11,7 @@ _logger = getLogger(__name__)
 Httpx = custom_httpx.get()
 
 
-class Page:
+class Fetcher:
     _cached_voice_actors: dict[str, VoiceActor] = {}
 
     def __init__(self, product_id: str) -> None:

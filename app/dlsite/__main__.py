@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from app import custom_httpx
 from app.dlsite import id_scanner
-from app.dlsite.page import Page
+from app.dlsite.fetcher import Fetcher
 from app.models import Product
 
 _logger = logging.getLogger(__package__)
@@ -21,7 +21,7 @@ def get_args() -> Namespace:
 
 
 async def fetch_product(product_id: str) -> Product:
-    fetcher = Page(product_id)
+    fetcher = Fetcher(product_id)
     product_page = await fetcher.get_product_page()
     page_soup = BeautifulSoup(product_page, "html.parser")
     product = Product(
