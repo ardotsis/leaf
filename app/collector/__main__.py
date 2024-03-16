@@ -37,6 +37,8 @@ async def fetch_product(product_id: str) -> Product:
 
 
 async def main() -> None:
+    # todo: hi from 'issue1'
+
     args = get_args()
 
     _logger.info(f"Process 1 Scan product IDs ({args.frm} <-> {args.to})")
