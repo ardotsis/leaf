@@ -5,9 +5,9 @@ from argparse import ArgumentParser, Namespace
 from bs4 import BeautifulSoup
 
 from app import _custom_httpx
-from app.collector._fetcher import Fetcher
-from app.collector import _id_scanner
 from app._models import Product
+from app.collector import _id_scanner
+from app.collector._fetcher import Fetcher
 
 _logger = logging.getLogger(__package__)
 
