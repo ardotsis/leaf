@@ -4,10 +4,10 @@ from argparse import ArgumentParser, Namespace
 
 from bs4 import BeautifulSoup
 
-from app import custom_httpx
-from app.dlsite import id_scanner
-from app.dlsite.fetcher import Fetcher
-from app.models import Product
+from app import _custom_httpx
+from app.collector._fetcher import Fetcher
+from app.collector import _id_scanner
+from app._models import Product
 
 _logger = logging.getLogger(__package__)
 
@@ -32,6 +32,7 @@ async def fetch_product(product_id: str) -> Product:
         fetcher.get_trial_url(page_soup),
         await fetcher.get_chobit_urls(),
     )
+    _logger.info(product)
     return product
 
 
@@ -39,7 +40,7 @@ async def main() -> None:
     args = get_args()
 
     _logger.info(f"Process 1 Scan product IDs ({args.frm} <-> {args.to})")
-    ids = await id_scanner.gets(args.frm, args.to)
+    ids = await _id_scanner.gets(args.frm, args.to)
 
     _logger.info("Process 2 - Fetch product pages")
     fetch_jobs = []
@@ -55,7 +56,7 @@ async def runner() -> None:
         await main()
     finally:
         _logger.debug("Closing custom httpx instance...")
-        await custom_httpx.get().aclose()
+        await _custom_httpx.get().aclose()
 
 
 if __name__ == "__main__":

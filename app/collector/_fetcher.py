@@ -3,12 +3,12 @@ from logging import getLogger
 
 from bs4 import BeautifulSoup
 
-from app import custom_httpx
-from app.models import VoiceActor
+from app import _custom_httpx
+from app._models import VoiceActor
 
 _logger = getLogger(__name__)
 
-Httpx = custom_httpx.get()
+Httpx = _custom_httpx.get()
 
 
 class Fetcher:
@@ -49,7 +49,7 @@ class Fetcher:
                         self._cached_voice_actors[name] = new_voice_actor
                         voice_actors.append(new_voice_actor)
                     else:
-                        _logger.info("Get the voice actor from the cache")
+                        _logger.info(f"Use cached voice actor data for '{name}'")
                         voice_actors.append(cached_voice_actor)
 
         return voice_actors

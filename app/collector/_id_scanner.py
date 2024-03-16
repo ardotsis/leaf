@@ -4,14 +4,14 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from app import custom_httpx
-from app.dlsite.exceptions import (InvalidPageRangeError,
-                                   InvalidResourceFormatError)
+from app import _custom_httpx
+from app.collector._exceptions import (InvalidPageRangeError,
+                                       InvalidResourceFormatError)
 
 _logger = getLogger(__name__)
 _RESOURCE_FILE = Path(__file__).parent / "resource_url.txt"
 
-Httpx = custom_httpx.get()
+Httpx = _custom_httpx.get()
 
 
 def _get_resource_url() -> str:
