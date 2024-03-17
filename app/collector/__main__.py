@@ -1,10 +1,13 @@
 import asyncio
 import logging
 from argparse import ArgumentParser, Namespace
+from dataclasses import asdict
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 
 from app import _custom_httpx
+from app._json_storage import STORAGE_DIR, JsonStorage
 from app._models import Product
 from app.collector import _id_scanner
 from app.collector._fetcher import Fetcher
@@ -20,7 +23,7 @@ def get_args() -> Namespace:
     return args
 
 
-async def fetch_product(product_id: str) -> Product:
+async def get_product(product_id: str) -> Product:
     fetcher = Fetcher(product_id)
     product_page = await fetcher.get_product_page()
     page_soup = BeautifulSoup(product_page, "html.parser")
@@ -37,20 +40,28 @@ async def fetch_product(product_id: str) -> Product:
 
 
 async def main() -> None:
-    # todo: hi from 'issue1'
-
     args = get_args()
 
     _logger.info(f"Process 1 Scan product IDs ({args.frm} <-> {args.to})")
     ids = await _id_scanner.gets(args.frm, args.to)
 
     _logger.info("Process 2 - Fetch product pages")
-    fetch_jobs = []
+    jobs = []
     for id_ in ids:
-        fetch_job = fetch_product(id_)
-        fetch_jobs.append(fetch_job)
+        job = get_product(id_)
+        jobs.append(job)
 
-    await asyncio.gather(*fetch_jobs)
+    dct = {}
+    for product in await asyncio.gather(*jobs):
+        product_dct = asdict(product)
+        product_dct.pop("id")
+        dct[product.id] = product_dct
+
+    _logger.info("Process 3 - Save dictionary data to json file")
+    date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    filepath = STORAGE_DIR / f"{date}_from_{args.frm}_to_{args.to}.json"
+    storage = JsonStorage(filepath)
+    storage.save(dct)
 
 
 async def runner() -> None:

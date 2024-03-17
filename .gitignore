@@ -1,5 +1,7 @@
 .idea/
 .mypy_cache/
+_DEV/
 venv/
+app/data/
 
 __pycache__/

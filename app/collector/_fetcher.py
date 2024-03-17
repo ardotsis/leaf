@@ -56,10 +56,7 @@ class Fetcher:
 
     @staticmethod
     async def _get_voice_actor_least_works(voice_actor_url: str) -> int:
-        req_voice_actor = await Httpx.get(
-            url=voice_actor_url
-            # url=f"https://www.dlsite.com/maniax/fsr/=/keyword_creater/\"{name}\""
-        )
+        req_voice_actor = await Httpx.get(url=voice_actor_url)
         soup = BeautifulSoup(req_voice_actor.text, "html.parser")
         least_works = len(soup.find_all(class_="work_img_main"))
         return least_works

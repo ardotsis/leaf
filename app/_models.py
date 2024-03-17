@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class VoiceActor:
     name: str
-    least_work: int
+    least_works: int
 
 
 @dataclass(frozen=True)
